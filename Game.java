@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 
+// Responsive Branch
 public class Game extends JPanel {
     
     public Board board;
