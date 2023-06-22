@@ -19,8 +19,8 @@ public class Tile {
    boolean expanded = false;
    int expandedCount = 20;
    Hashtable<Integer, Color> colormap = new Hashtable<Integer, Color>();
-   Color whiteText = new Color(249, 246, 242);
-   Color blackText = new Color(119, 110, 101);
+   static Color whiteText = new Color(249, 246, 242);
+   static Color blackText = new Color(119, 110, 101);
 
    public Tile(int num, int x, int y, int destX, int destY) {
 

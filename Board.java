@@ -29,13 +29,53 @@ public class Board {
       // this.offsetX = (int) ((gameWidth - backdropWidth) / 2);
       // this.offsetY = (int) ((gameHeight - backdropHeight) / 5 * 2.5);
       this.game = game;
-      clearBoard();
-      addTile(2, 3, 0);
-      addTile(2, 1, 0);
-      addTile(4, 0, 0);
-      addTile(2, 2, 0);
+      //clearBoard();
+      newBoard();
+      //addTile(2, 3, 0);
+      //addTile(2, 1, 0);
+      //addTile(4, 0, 0);
+      //addTile(2, 2, 0);
+      //losingBoardSetup();
+      //winningBoardSetup();
    }
 
+   private void losingBoardSetup() {
+      addTile(8, 0, 0);
+      addTile(64, 1, 0);
+      addTile(16, 2, 0);
+      addTile(4, 3, 0);
+      addTile(16, 0, 1);
+      addTile(256, 1, 1);
+      addTile(32, 2, 1);
+      addTile(2, 3, 1);
+      addTile(8, 0, 2);
+      addTile(1024, 1, 2);
+      addTile(128, 2, 2);
+      addTile(8, 3, 2);
+      addTile(16, 0, 3);
+      addTile(8, 1, 3);
+      //addTile(4, 2, 3);
+      
+   }
+   private void winningBoardSetup() {
+      addTile(64, 1, 0);
+      addTile(16, 2, 0);
+      addTile(4, 3, 0);
+      addTile(16, 0, 1);
+      addTile(256, 1, 1);
+      addTile(32, 2, 1);
+      addTile(2, 3, 1);
+      addTile(8, 0, 2);
+      addTile(1024, 1, 2);
+      addTile(128, 2, 2);
+      addTile(8, 3, 2);
+      addTile(16, 0, 3);
+      addTile(8, 1, 3);
+      addTile(1024, 2, 3);
+      addTile(1024, 3, 3);
+      //addTile(4, 2, 3);
+      
+   }
    public void resize(int windowWidth, int windowHeight) {
       this.offsetX = (int) ((windowWidth - backdropWidth) / 2);
       this.offsetY = (int) ((windowHeight - backdropHeight) / 5 * 4);
@@ -62,6 +102,10 @@ public class Board {
    private void spawnRandomTile() {
       ArrayList<Point> emptyCells = getEmptyCells();
       int randMax = emptyCells.size();
+      if (randMax <= 0) {
+         System.out.println("Cannot spawn new tile");
+         return;
+      }
       int randI = (int) (Math.random() * randMax);
       Point randCell = emptyCells.get(randI);
       addTile(2, (int) randCell.getX(), (int) randCell.getY());
@@ -121,9 +165,72 @@ public class Board {
       }
       System.out.println("After:");
       printBoard();
-      spawnRandomTile();
+      if (!getEmptyCells().isEmpty()) {
+         spawnRandomTile();
+      }
 
    }
+   // return True if there is a match
+   // return False if no match
+   private boolean compareCellRight(int x, int y) {
+      if (x == gridWidth - 1) {
+         return false;
+      }
+      if (getCellTileNum(x, y) == getCellTileNum(x+1, y)) {
+         return true;
+      }
+      return false;
+      
+   }
+
+   // return True if there is a match
+   // return false if no match
+   private boolean compareCellDown(int x, int y) {
+      if (y == gridHeight - 1) {
+         return false;
+      }
+      if (getCellTileNum(x, y) == getCellTileNum(x, y+1)) {
+         return true;
+      }
+      return false;
+   }
+   private int getCellTileNum(int x, int y) {
+      //Assumes that the cell has a tile
+      return getTiles(x,y).get(0).getNum();
+   }
+   public boolean isGameWon() {
+      for (int x = 0; x < gridWidth; x++) {
+         for (int y = 0; y < gridHeight; y++) {
+            // We are only concerned once the tile actually merges
+            // so we only grab the 0th. 
+            if (getTiles(x,y).size() > 0 && getTiles(x,y).get(0).getNum() == 2048) {
+               return true;
+            }
+         }
+      }
+      return false;
+   }
+   public boolean isGameLost() {
+      // If there are no empty cells
+      if (getEmptyCells().isEmpty()) {
+         for (int y = 0; y < gridHeight; y++) {
+            for (int x = 0; x < gridWidth; x++) {
+               // if there is a not merged cell, return false
+               if (getTiles(x,y).size() > 1) {
+                  return false;
+               }
+               if (compareCellRight(x, y) || compareCellDown(x, y)) {
+                  // if there is a match, return
+                  return false;
+               }
+            }
+         }
+         //if no matches and board is full
+         return true;
+      }
+      return false;
+      
+   } 
    private void printBoard() {
       for (int row = 0; row < gridHeight; row++) {
          for (int col = 0; col < gridWidth; col++) {
@@ -264,7 +371,14 @@ public class Board {
       return gap + row * (gap + tileDim) + offsetY;
    }
 
+   public void newBoard() {
+      clearBoard();
+      spawnRandomTile();
+      spawnRandomTile();
+   }
    public void clearBoard() {
+
+      tiles = new ArrayList<>(gridWidth);
       for (int i = 0; i < gridWidth; i++) {
          tiles.add(new ArrayList<ArrayList<Tile>>(gridHeight));
          for (int j = 0; j < gridHeight; j++) {
