@@ -156,4 +156,12 @@ public class Tile {
    public void mergeNum() {
       this.num *= 2;
    }
+   public void adjustPosition(int x, int y) {
+      if (this.destX == this.x && this.destY == this.y) {
+         this.destX = x;
+         this.destY = y;
+      }
+      this.x = x;
+      this.y = y;
+   }
 }

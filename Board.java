@@ -1,4 +1,6 @@
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Dimension;
 import java.util.Queue;
 import java.awt.Point;
 import java.util.Stack;
@@ -18,36 +20,30 @@ public class Board {
    public static int tileDim = 100;
    public static int arc = 5;
    public static int gap = 15;
-   int backdropWidth = gridWidth * (tileDim + gap) + gap;
-   int backdropHeight = gridHeight * (tileDim + gap) + gap;
+   public int backdropWidth = gridWidth * (tileDim + gap) + gap;
+   public int backdropHeight = gridHeight * (tileDim + gap) + gap;
    ArrayList<ArrayList<ArrayList<Tile>>> tiles = new ArrayList<>(gridWidth);
-   public Board(int gameWidth, int gameHeight) {
-      this.offsetX = (int) ((gameWidth - backdropWidth) / 2);
-      this.offsetY = (int) ((gameHeight - backdropHeight) / 5 * 2.5);
+   private Game game;
+   public Board(Game game) {
+      // this.offsetX = (int) ((gameWidth - backdropWidth) / 2);
+      // this.offsetY = (int) ((gameHeight - backdropHeight) / 5 * 2.5);
+      this.game = game;
       clearBoard();
       addTile(2, 3, 0);
       addTile(2, 1, 0);
       addTile(4, 0, 0);
-      //tiles.get(0).get(0).add(new Tile(2, getX(0), getY(0), getX(0), getY(0)));
+   }
 
-      //tiles.get(2).get(0).add(new Tile(2, getX(2), getY(0), getX(2), getY(0)));
-      // tiles.get(2).get(0).add(new Tile(4, getX(2), getY(0), getX(2), getY(0)));
-      //tiles[0][0].add(new Tile(2, getX(0), getY(0), getX(0), getY(0)));
-      
-      //tiles[0][1] = new Tile(4, getX(0), getY(1));
-      //tiles[0][2] = new Tile(8, getX(0), getY(2));
-      //tiles[0][3] = new Tile(16, getX(0), getY(3));
-      //tiles[1][0] = new Tile(32, getX(1), getY(0));
-      //tiles[1][1] = new Tile(64, getX(1), getY(1));
-      //tiles[1][2] = new Tile(128, getX(1), getY(2));
-      //tiles[1][3] = new Tile(256, getX(1), getY(3));
-      //tiles[2][0] = new Tile(512, getX(2), getY(0));
-      //tiles[2][1] = new Tile(1024, getX(2), getY(1));
-      //tiles[2][2] = new Tile(2048, getX(2), getY(2));
-      //tiles[2][3] = new Tile(4096, getX(2), getY(3));
-      //tiles[3][0] = new Tile(8192, getX(3), getY(0));
-      //tiles[3][1] = new Tile(16384, getX(3), getY(1));
-      //tiles[3][2] = new Tile(131072, getX(3), getY(2));
+   public void resize(int windowWidth, int windowHeight) {
+      this.offsetX = (int) ((windowWidth - backdropWidth) / 2);
+      this.offsetY = (int) ((windowHeight - backdropHeight) / 5 * 4);
+      for (int x = 0; x < gridWidth; x++) {
+         for (int y = 0; y < gridHeight; y++) {
+            for (Tile t : getTiles(x, y)) {
+               t.adjustPosition(getX(x), getY(y));
+            }
+         }
+      }
    }
 
    private void addTile(int num, int x, int y) {
