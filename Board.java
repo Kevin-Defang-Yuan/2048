@@ -1,4 +1,5 @@
 import java.awt.Graphics2D;
+import java.lang.Math;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.util.Queue;
@@ -32,6 +33,7 @@ public class Board {
       addTile(2, 3, 0);
       addTile(2, 1, 0);
       addTile(4, 0, 0);
+      addTile(2, 2, 0);
    }
 
    public void resize(int windowWidth, int windowHeight) {
@@ -46,6 +48,24 @@ public class Board {
       }
    }
 
+   private ArrayList<Point> getEmptyCells() {
+      ArrayList<Point> emptyCells = new ArrayList<>();
+      for (int x = 0; x < gridWidth; x++) {
+         for (int y = 0; y < gridHeight; y++) {
+            if (getTiles(x, y).isEmpty()) {
+               emptyCells.add(new Point(x, y));
+            }
+         }
+      }
+      return emptyCells;
+   }
+   private void spawnRandomTile() {
+      ArrayList<Point> emptyCells = getEmptyCells();
+      int randMax = emptyCells.size();
+      int randI = (int) (Math.random() * randMax);
+      Point randCell = emptyCells.get(randI);
+      addTile(2, (int) randCell.getX(), (int) randCell.getY());
+   }
    private void addTile(int num, int x, int y) {
       this.tiles.get(x).get(y).add(new Tile(num, getX(x), getY(y), getX(x), getY(y)));
    }
@@ -65,7 +85,12 @@ public class Board {
       for (int i = 0; i < gridWidth; i++) {
          for (int j = 0; j < gridHeight; j++) {
             for (Tile t : tiles.get(i).get(j)) {
-               t.paint(g2d);
+               if (t.getShrinked()) {
+                  t.shrinkedPaint(g2d);
+               }
+               else {
+                  t.paint(g2d);
+               }
                // If expanded, draw that one
                if (t.getExpanded()) {
                   t.expandedPaint(g2d);
@@ -96,6 +121,7 @@ public class Board {
       }
       System.out.println("After:");
       printBoard();
+      spawnRandomTile();
 
    }
    private void printBoard() {
@@ -171,6 +197,8 @@ public class Board {
                getTiles((int) p.getX(), (int) p.getY()).add(tActive);
                getTiles(x, y).remove(0);
                tActive.setMerge(true);
+               //update queue
+               cellQueue.add(new Point(x, y));
                return;
             }
          }

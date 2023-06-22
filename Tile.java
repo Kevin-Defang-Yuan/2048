@@ -8,8 +8,9 @@ import java.util.Hashtable;
 public class Tile {
    int vel =  ((Board.gap + Board.tileDim) / 5);
    boolean merge = false;
-   final int EXPANSION = 2;
    boolean mergeComplete = false;
+   boolean shrinked = true; 
+   int shrinkedCount = 40;
    int destX;
    int destY;
    int x;
@@ -78,6 +79,16 @@ public class Tile {
       
    }
 
+   public void shrinkedPaint(Graphics2D g2d) {
+      g2d.setColor(getColor(num));
+      int newX = (int) (x + Board.tileDim * 0.25);
+      int newY = (int) (y + Board.tileDim * 0.25);
+      g2d.fillRoundRect(newX, newY, (int) (Board.tileDim * 0.5), (int) (Board.tileDim * 0.5), Board.arc, Board.arc);
+      shrinkedCount -= 1;
+      if (shrinked && shrinkedCount <= 0) {
+         shrinked = false; 
+      }
+   }
    public void expandedPaint(Graphics2D g2d) {
       g2d.setColor(getColor(num));
       int newX = (int) (x - Board.tileDim * 0.2);
@@ -163,5 +174,8 @@ public class Tile {
       }
       this.x = x;
       this.y = y;
+   }
+   public boolean getShrinked() {
+      return this.shrinked;
    }
 }
