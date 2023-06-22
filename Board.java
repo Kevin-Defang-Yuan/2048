@@ -197,8 +197,10 @@ public class Board {
                getTiles((int) p.getX(), (int) p.getY()).add(tActive);
                getTiles(x, y).remove(0);
                tActive.setMerge(true);
+               
                //update queue
                cellQueue.add(new Point(x, y));
+               
                return;
             }
          }
@@ -226,6 +228,8 @@ public class Board {
    }
 
    public void move() {
+      // Keep track of all merge scores
+      int mergeScore = 0;
       for (int i = 0; i < gridWidth; i++) {
          for (int j = 0; j < gridHeight; j++) {
             ArrayList<Tile> tileArray = tiles.get(i).get(j);
@@ -240,8 +244,16 @@ public class Board {
                tileArray.get(OLD).mergeNum();
                tileArray.get(OLD).setMergeComplete(false);
                printBoard();
+               // update score
+               game.scoreManager.addToScore(tileArray.get(OLD).getNum());
+               mergeScore += tileArray.get(OLD).getNum();
             }
          }
+      }
+      // if mergescore is greater than 0, display
+      if (mergeScore > 0) {
+         game.scoreManager.setFadeNum(mergeScore);
+
       }
    }
    public int getX(int col) {

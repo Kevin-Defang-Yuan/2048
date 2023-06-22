@@ -76,6 +76,7 @@ public class Game extends JPanel {
 
     public void move() {
        board.move();
+       scoreManager.move();
     }
 
     public void paint(Graphics g) {
