@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 
-// Random Branch
+// Score Branch
 public class Game extends JPanel {
     
     public Board board = new Board(this);
