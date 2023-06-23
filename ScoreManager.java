@@ -5,7 +5,7 @@ import java.awt.Font;
 
 public class ScoreManager {
 
-   private int bestScore = 100;
+   private int bestScore = 0;
    private int currentScore = 0;
    private int scoreGap = 5;
    private int horizontalBuffer = 20;
