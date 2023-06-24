@@ -52,6 +52,10 @@ public class Game extends JPanel {
              if (mode == LOSE) {
                 int x = loseTryAgainButtonX;
                 int y = loseTryAgainButtonY;
+                System.out.println(e.getX());
+                System.out.println(e.getY());
+                System.out.println(x);
+                System.out.println(y);
                 if (e.getX() >= x && e.getX() <= x + buttonWidth && e.getY() >= y && e.getY() <= y + buttonHeight) {
                    board.newBoard();
                    mode = PLAY;
